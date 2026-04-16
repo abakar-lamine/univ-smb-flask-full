@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+
+{% block title %}Vue Globale{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2 class="border-bottom pb-2">Tableau de bord des infrastructures</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card border-primary h-100">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Load Balancers ({{ lbs|length }})</h5>
+            </div>
+            <div class="card-body">
+                {% if lbs %}
+                    <ul class="list-group list-group-flush">
+                    {% for lb in lbs %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ lb.name }} <span class="badge bg-secondary">{{ lb.ip_bind }}</span>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted">Aucun Load Balancer configuré.</p>
+                {% endif %}
+            </div>
+            <div class="card-footer text-center">
+                <a href="{{ url_for('lb_list') }}" class="btn btn-sm btn-outline-primary">Gérer</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card border-success h-100">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Reverse Proxies ({{ rps|length }})</h5>
+            </div>
+            <div class="card-body">
+                {% if rps %}
+                    <ul class="list-group list-group-flush">
+                    {% for rp in rps %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ rp.name }}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted">Aucun Reverse Proxy configuré.</p>
+                {% endif %}
+            </div>
+            <div class="card-footer text-center">
+                <a href="{{ url_for('rp_list') }}" class="btn btn-sm btn-outline-success">Gérer</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card border-info h-100">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Web Servers ({{ wss|length }})</h5>
+            </div>
+            <div class="card-body">
+                {% if wss %}
+                    <ul class="list-group list-group-flush">
+                    {% for ws in wss %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ ws.name }}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted">Aucun Web Server configuré.</p>
+                {% endif %}
+            </div>
+            <div class="card-footer text-center">
+                <a href="{{ url_for('ws_list') }}" class="btn btn-sm btn-outline-info">Gérer</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

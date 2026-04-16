@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block title %}Profil de {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col">
+        <h2>Détails du compte</h2>
+        <a href="{{ url_for('list_profile') }}" class="btn btn-outline-secondary btn-sm">&larr; Retour à la liste</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">Informations de {{ user.username }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <div class="bg-light rounded-circle d-inline-block p-4 mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-person-fill text-secondary" viewBox="0 0 16 16">
+                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                        </svg>
+                    </div>
+                    <h4>{{ user.username }}</h4>
+                </div>
+                
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <th scope="row" class="w-50">Statut d'autorisation :</th>
+                            <td>
+                                {% if user.authorized %}
+                                    <span class="badge bg-success">Autorisé</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Non autorisé</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Accès API :</th>
+                            <td><code class="text-primary">Activé</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer bg-white text-center">
+                <button class="btn btn-sm btn-outline-warning">Réinitialiser le mot de passe</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

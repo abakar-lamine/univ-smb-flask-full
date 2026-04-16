@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block title %}Configuration RP - {{ rp.name }}{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col">
+        <h2>Détail du Reverse Proxy : {{ rp.name }}</h2>
+        <a href="{{ url_for('rp_list') }}" class="btn btn-outline-secondary btn-sm">&larr; Retour à la liste</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-5">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-dark text-white">Informations Techniques</div>
+            <div class="card-body">
+                <p><strong>ID :</strong> {{ rp.id }}</p>
+                <p><strong>Nom :</strong> {{ rp.name }}</p>
+                <p><strong>IP d'écoute :</strong> {{ rp.ip_bind }}</p>
+                <p><strong>Cible (Forward to) :</strong> {{ rp.target }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <div class="card border-success shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Fichier Nginx (Reverse Proxy)</h5>
+            </div>
+            <div class="card-body bg-light">
+                <pre class="mb-0"><code>
+server {
+    listen {{ rp.ip_bind }}:80;
+    server_name {{ rp.name | lower | replace(' ', '-') }}.univ-savoie.fr;
+
+    access_log /var/log/nginx/{{ rp.name | lower }}_access.log;
+
+    location / {
+        proxy_pass {{ rp.target }};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+                </code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

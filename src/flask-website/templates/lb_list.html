@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block title %}Gestion des Load Balancers{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col d-flex justify-content-between align-items-center">
+        <h2>Liste des Load Balancers</h2>
+        <a href="{{ url_for('lb_create') }}" class="btn btn-success">+ Nouveau Load Balancer</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <table class="table table-striped table-hover border">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>IP Bind</th>
+                    <th>Pass (Cible)</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if loadbalancers %}
+                    {% for lb in loadbalancers %}
+                    <tr>
+                        <td>{{ lb.id }}</td>
+                        <td><strong>{{ lb.name }}</strong></td>
+                        <td>{{ lb.ip_bind }}</td>
+                        <td>{{ lb.pass }}</td>
+                        <td class="text-end">
+                            <a href="{{ url_for('lb_detail', id=lb.id) }}" class="btn btn-sm btn-info text-white">Voir la config</a>
+                            
+                            <form action="{{ url_for('lb_delete', id=lb.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce Load Balancer ?');">
+                                <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">Aucun Load Balancer trouvé. Cliquez sur "Nouveau" pour en ajouter un.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

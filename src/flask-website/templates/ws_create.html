@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}Nouveau Serveur Web{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col">
+        <h2>Ajouter un Serveur Web</h2>
+        <a href="{{ url_for('ws_list') }}" class="btn btn-outline-secondary btn-sm">&larr; Retour à la liste</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form action="{{ url_for('ws_create') }}" method="POST">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nom du Serveur Web</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="ex: Site-Vitrine" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="port" class="form-label">Port d'écoute</label>
+                        <input type="number" class="form-control" id="port" name="port" placeholder="ex: 80 ou 8080" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="root_path" class="form-label">Chemin racine (Root Path)</label>
+                        <input type="text" class="form-control" id="root_path" name="root_path" placeholder="ex: /var/www/html/monsite" required>
+                        <div class="form-text">Le dossier sur le serveur (Linux/Debian/AlmaLinux) où se trouvent les fichiers HTML.</div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">Créer le Serveur Web</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

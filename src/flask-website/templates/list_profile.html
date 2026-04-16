@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block title %}Liste des Profils{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>Profils Utilisateurs</h2>
+        <p class="text-muted">Liste des comptes ayant accès au configurateur.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="list-group shadow-sm">
+            {% if profiles %}
+                {% for user in profiles %}
+                <a href="{{ url_for('profile', username=user.username) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-1">{{ user.username }}</h5>
+                        <small class="text-muted">Rôle : {{ user.role }}</small>
+                    </div>
+                    <span class="btn btn-sm btn-outline-primary">Voir le détail</span>
+                </a>
+                {% endfor %}
+            {% else %}
+                <div class="list-group-item text-center py-4">
+                    <p class="mb-0 text-muted">Aucun profil utilisateur trouvé.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="alert alert-info shadow-sm">
+            <h5 class="alert-heading">Info Sécurité</h5>
+            <p class="small mb-0">Ces profils sont gérés directement par le backend de l'API. Seuls les administrateurs peuvent modifier les rôles.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

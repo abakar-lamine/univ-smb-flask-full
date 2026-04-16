@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block title %}Gestion des Serveurs Web{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col d-flex justify-content-between align-items-center">
+        <h2>Liste des Serveurs Web</h2>
+        <a href="{{ url_for('ws_create') }}" class="btn btn-success">+ Nouveau Serveur Web</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <table class="table table-striped table-hover border">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Port d'écoute</th>
+                    <th>Chemin racine (Root)</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if webservers %}
+                    {% for ws in webservers %}
+                    <tr>
+                        <td>{{ ws.id }}</td>
+                        <td><strong>{{ ws.name }}</strong></td>
+                        <td>{{ ws.port }}</td>
+                        <td><code>{{ ws.root_path }}</code></td>
+                        <td class="text-end">
+                            <a href="{{ url_for('ws_detail', id=ws.id) }}" class="btn btn-sm btn-info text-white">Voir la config</a>
+                            <form action="{{ url_for('ws_delete', id=ws.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Supprimer ce Serveur Web ?');">
+                                <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">Aucun Serveur Web trouvé.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

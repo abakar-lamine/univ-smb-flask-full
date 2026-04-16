@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block title %}Gestion des Reverse Proxies{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col d-flex justify-content-between align-items-center">
+        <h2>Liste des Reverse Proxies</h2>
+        <a href="{{ url_for('rp_create') }}" class="btn btn-success">+ Nouveau Reverse Proxy</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <table class="table table-striped table-hover border">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>IP Bind</th>
+                    <th>Cible (Target)</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if reverseproxies %}
+                    {% for rp in reverseproxies %}
+                    <tr>
+                        <td>{{ rp.id }}</td>
+                        <td><strong>{{ rp.name }}</strong></td>
+                        <td>{{ rp.ip_bind }}</td>
+                        <td>{{ rp.target }}</td>
+                        <td class="text-end">
+                            <a href="{{ url_for('rp_detail', id=rp.id) }}" class="btn btn-sm btn-info text-white">Voir la config</a>
+                            <form action="{{ url_for('rp_delete', id=rp.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Supprimer ce Reverse Proxy ?');">
+                                <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">Aucun Reverse Proxy trouvé.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

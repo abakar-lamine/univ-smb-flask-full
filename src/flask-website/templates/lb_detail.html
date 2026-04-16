@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block title %}Configuration Nginx - {{ lb.name }}{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col">
+        <h2>Détail du Load Balancer : {{ lb.name }}</h2>
+        <a href="{{ url_for('lb_list') }}" class="btn btn-outline-secondary btn-sm">&larr; Retour à la liste</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-5">
+        <div class="card mb-4">
+            <div class="card-header bg-dark text-white">Informations</div>
+            <div class="card-body">
+                <p><strong>ID :</strong> {{ lb.id }}</p>
+                <p><strong>Nom :</strong> {{ lb.name }}</p>
+                <p><strong>IP d'écoute :</strong> {{ lb.ip_bind }}</p>
+                <p><strong>Cible (Pass) :</strong> {{ lb.pass }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <div class="card border-primary">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <span>Fichier de configuration Nginx</span>
+                <button class="btn btn-sm btn-light" onclick="copyConfig()">Copier</button>
+            </div>
+            <div class="card-body bg-light">
+                <pre id="configArea" class="mb-0"><code>
+upstream backend_{{ lb.id }} {
+    server {{ lb.pass | replace('http://', '') | replace('https://', '') }};
+}
+
+server {
+    listen {{ lb.ip_bind }}:80;
+    server_name {{ lb.name | lower | replace(' ', '_') }}.local;
+
+    location / {
+        proxy_pass http://backend_{{ lb.id }};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+                </code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function copyConfig() {
+    const config = document.getElementById('configArea').innerText;
+    navigator.clipboard.writeText(config);
+    alert('Configuration copiée dans le presse-papier !');
+}
+</script>
+{% endblock %}

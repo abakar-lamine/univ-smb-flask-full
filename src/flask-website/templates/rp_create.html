@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}Nouveau Reverse Proxy{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col">
+        <h2>Ajouter un Reverse Proxy</h2>
+        <a href="{{ url_for('rp_list') }}" class="btn btn-outline-secondary btn-sm">&larr; Retour à la liste</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form action="{{ url_for('rp_create') }}" method="POST">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nom du Reverse Proxy</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="ex: RP-App-Prod" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="ip_bind" class="form-label">IP Bind (Écoute)</label>
+                        <input type="text" class="form-control" id="ip_bind" name="ip_bind" placeholder="ex: 172.16.0.10" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="target" class="form-label">Cible (Target Server)</label>
+                        <input type="text" class="form-control" id="target" name="target" placeholder="ex: http://10.0.0.5:8080" required>
+                        <div class="form-text">L'adresse du serveur interne vers lequel rediriger les requêtes.</div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">Créer le Reverse Proxy</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

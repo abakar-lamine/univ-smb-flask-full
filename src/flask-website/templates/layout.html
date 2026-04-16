@@ -14,17 +14,32 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
             <div class="container-fluid">
-                <a class="navbar-brand" href="/">Web Configurator</a>
+                <a class="navbar-brand" href="{{ url_for('index') }}">Web Configurator</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
                     aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                    <ul class="navbar-nav">
+                    <ul class="navbar-nav w-100">
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="{{ url_for('start') }}">Accueil</a>
+                            <a class="nav-link" aria-current="page" href="{{ url_for('index') }}">Accueil</a>
                         </li>
+                        
+                        {% if session['username'] %}
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('list_all') }}">Vue Globale</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('lb_list') }}">Load Balancers</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('rp_list') }}">Reverse Proxies</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('ws_list') }}">Web Servers</a></li>
+                            
+                            <li class="nav-item ms-auto">
+                                <a class="nav-link text-danger" href="{{ url_for('logout') }}">Déconnexion ({{ session['username'] }})</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item ms-auto">
+                                <a class="nav-link text-success" href="{{ url_for('login') }}">Connexion</a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
@@ -32,18 +47,22 @@
     </header>
 
     <section>
-        <div class="container">
+        <div class="container mt-3">
             <div class="row">
                 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ url_for('start') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
                         <li class="breadcrumb-item active" aria-current="page">{{ self.title() }}</li>
                     </ol>
                 </nav>
             </div>
         </div>
-        {% block content %}{% endblock %}
+        
+        <div class="container mb-5">
+            {% block content %}{% endblock %}
+        </div>
     </section>
+    
     <footer>
         <nav class="navbar fixed-bottom navbar-light bg-light">
             <div class="container-fluid">

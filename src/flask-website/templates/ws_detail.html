@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block title %}Configuration WS - {{ ws.name }}{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col">
+        <h2>Détail du Serveur Web : {{ ws.name }}</h2>
+        <a href="{{ url_for('ws_list') }}" class="btn btn-outline-secondary btn-sm">&larr; Retour à la liste</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-5">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-dark text-white">Informations Techniques</div>
+            <div class="card-body">
+                <p><strong>ID :</strong> {{ ws.id }}</p>
+                <p><strong>Nom :</strong> {{ ws.name }}</p>
+                <p><strong>Port :</strong> {{ ws.port }}</p>
+                <p><strong>Dossier racine :</strong> <code>{{ ws.root_path }}</code></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <div class="card border-info shadow-sm">
+            <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Fichier Nginx (Web Server)</h5>
+                <button class="btn btn-sm btn-light" onclick="copyConfig()">Copier</button>
+            </div>
+            <div class="card-body bg-light">
+                <pre id="configArea" class="mb-0"><code>
+server {
+    listen {{ ws.port }};
+    server_name {{ ws.name | lower | replace(' ', '_') }}.local;
+
+    root {{ ws.root_path }};
+    index index.html index.htm;
+
+    # Fichiers de log
+    access_log /var/log/nginx/{{ ws.name | lower | replace(' ', '_') }}_access.log;
+    error_log /var/log/nginx/{{ ws.name | lower | replace(' ', '_') }}_error.log;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+                </code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function copyConfig() {
+    const config = document.getElementById('configArea').innerText;
+    navigator.clipboard.writeText(config);
+    alert('Configuration copiée dans le presse-papier !');
+}
+</script>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}Nouveau Load Balancer{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col">
+        <h2>Ajouter un Load Balancer</h2>
+        <a href="{{ url_for('lb_list') }}" class="btn btn-outline-secondary btn-sm">&larr; Retour à la liste</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form action="{{ url_for('lb_create') }}" method="POST">
+                    
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nom du Load Balancer</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="ex: LB Inter 3" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="ip_bind" class="form-label">IP Bind (Écoute)</label>
+                        <input type="text" class="form-control" id="ip_bind" name="ip_bind" placeholder="ex: 172.0.0.3" required>
+                        <div class="form-text">L'adresse IP sur laquelle le Load Balancer va écouter.</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="pass" class="form-label">Pass (URL Cible)</label>
+                        <input type="text" class="form-control" id="pass" name="pass" placeholder="ex: http://localhost/C" required>
+                        <div class="form-text">L'adresse vers laquelle le trafic sera redirigé.</div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-success">Créer le Load Balancer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
