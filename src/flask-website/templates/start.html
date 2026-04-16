@@ -4,11 +4,28 @@
 {{ super() }}
 {% endblock %}
 {% block content %}
-<div class="container">
-  <div class="row">
-    <div class="col">
-        Hello, WebSite !
+<div class="p-5 mb-4 bg-body-tertiary rounded-3 shadow-sm text-center">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Bienvenue sur Web Configurator</h1>
+        <p class="col-md-8 mx-auto fs-4 text-muted">
+            L'outil centralisé pour générer, déployer et administrer vos infrastructures Nginx, Load Balancers et Reverse Proxies.
+        </p>
+        
+        <div class="mt-4">
+            {% if session['username'] %}
+                <p class="text-success mb-3">👋 Bonjour <strong>{{ session['username'] }}</strong>, vous êtes connecté.</p>
+                <a href="{{ url_for('list_all') }}" class="btn btn-primary btn-lg px-4 shadow-sm">
+                    Accéder au Tableau de bord
+                </a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg px-4 me-md-2 shadow-sm">
+                    Se connecter
+                </a>
+                <a href="{{ url_for('register') }}" class="btn btn-outline-secondary btn-lg px-4 shadow-sm">
+                    Créer un compte
+                </a>
+            {% endif %}
+        </div>
     </div>
-  </div>
 </div>
 {% endblock %}

@@ -27,7 +27,7 @@ def login_required(f):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('start.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -45,8 +45,8 @@ def login():
                 return redirect(url_for('list_all'))
         except:
             pass
-        return render_template("login.html", error="Nom d'utilisateur ou mot de passe incorrect")
-    return render_template("login.html")
+        return render_template("auth/login.html", error="Nom d'utilisateur ou mot de passe incorrect")
+    return render_template("auth/login.html")
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -57,7 +57,7 @@ def register():
         
         # Validation simple côté serveur
         if password != confirm_password:
-            return render_template("register.html", error="Les mots de passe ne correspondent pas")
+            return render_template("auth/register.html", error="Les mots de passe ne correspondent pas")
             
         try:
             resp = requests.post(f"{API_URL}/register", json={
@@ -68,11 +68,11 @@ def register():
                 return redirect(url_for('login')) # Redirection après succès
             else:
                 error_msg = resp.json().get('message', 'Erreur lors de l\'inscription')
-                return render_template("register.html", error=error_msg)
+                return render_template("auth/register.html", error=error_msg)
         except:
-            return render_template("register.html", error="L'API est indisponible")
+            return render_template("auth/register.html", error="L'API est indisponible")
             
-    return render_template("register.html")
+    return render_template("auth/register.html")
 
 @app.route('/logout')
 def logout():
@@ -91,7 +91,7 @@ def list_profile():
         profiles = requests.get(f"{API_URL}/identity").json()
     except:
         profiles = []
-    return render_template('list_profile.html', profiles=profiles)
+    return render_template('auth/list_profile.html', profiles=profiles)
 
 @app.route('/profile/<username>')
 @login_required
@@ -100,7 +100,7 @@ def profile(username):
         user_data = requests.get(f"{API_URL}/identity/{username}").json()
     except:
         user_data = {}
-    return render_template('profile.html', user=user_data)
+    return render_template('auth/profile.html', user=user_data)
 
 @app.route('/list_all')
 @login_required
@@ -112,7 +112,7 @@ def list_all():
         wss = requests.get(f"{API_URL}/config/ws").json()
     except:
         lbs, rps, wss = [], [], []
-    return render_template('list_all.html', lbs=lbs, rps=rps, wss=wss)
+    return render_template('dashboard/list_all.html', lbs=lbs, rps=rps, wss=wss)
 
 @app.route('/download/<type_cfg>/<int:id>')
 @login_required
@@ -140,7 +140,7 @@ def lb_list():
         data = requests.get(f"{API_URL}/config/lb").json()
     except:
         data = []
-    return render_template('lb_list.html', loadbalancers=data)
+    return render_template('lb/lb_list.html', loadbalancers=data)
 
 @app.route('/lb/<int:id>')
 @login_required
@@ -150,7 +150,7 @@ def lb_detail(id):
         lb = requests.get(f"{API_URL}/config/lb/{id}").json()
     except:
         lb = {}
-    return render_template('lb_detail.html', lb=lb)
+    return render_template('lb/lb_detail.html', lb=lb)
 
 @app.route('/lb/create', methods=['GET', 'POST'])
 @login_required
@@ -163,7 +163,7 @@ def lb_create():
         }
         requests.post(f"{API_URL}/config/lb", json=lb_data)
         return redirect(url_for('lb_list'))
-    return render_template('lb_create.html')
+    return render_template('lb/lb_create.html')
 
 @app.route('/lb/<int:id>/delete', methods=['POST'])
 @login_required
@@ -182,7 +182,7 @@ def rp_list():
         data = requests.get(f"{API_URL}/config/rp").json()
     except:
         data = []
-    return render_template('rp_list.html', reverseproxies=data)
+    return render_template('rp/rp_list.html', reverseproxies=data)
 
 @app.route('/rp/<int:id>')
 @login_required
@@ -191,7 +191,7 @@ def rp_detail(id):
         rp = requests.get(f"{API_URL}/config/rp/{id}").json()
     except:
         rp = {}
-    return render_template('rp_detail.html', rp=rp)
+    return render_template('rp/rp_detail.html', rp=rp)
 
 @app.route('/rp/create', methods=['GET', 'POST'])
 @login_required
@@ -204,7 +204,7 @@ def rp_create():
         }
         requests.post(f"{API_URL}/config/rp", json=rp_data)
         return redirect(url_for('rp_list'))
-    return render_template('rp_create.html')
+    return render_template('rp/rp_create.html')
 
 @app.route('/rp/<int:id>/delete', methods=['POST'])
 @login_required
@@ -223,7 +223,7 @@ def ws_list():
         data = requests.get(f"{API_URL}/config/ws").json()
     except:
         data = []
-    return render_template('ws_list.html', webservers=data)
+    return render_template('ws/ws_list.html', webservers=data)
 
 @app.route('/ws/<int:id>')
 @login_required
@@ -232,7 +232,7 @@ def ws_detail(id):
         ws = requests.get(f"{API_URL}/config/ws/{id}").json()
     except:
         ws = {}
-    return render_template('ws_detail.html', ws=ws)
+    return render_template('ws/ws_detail.html', ws=ws)
 
 @app.route('/ws/create', methods=['GET', 'POST'])
 @login_required
@@ -245,7 +245,7 @@ def ws_create():
         }
         requests.post(f"{API_URL}/config/ws", json=ws_data)
         return redirect(url_for('ws_list'))
-    return render_template('ws_create.html')
+    return render_template('ws/ws_create.html')
 
 @app.route('/ws/<int:id>/delete', methods=['POST'])
 @login_required
