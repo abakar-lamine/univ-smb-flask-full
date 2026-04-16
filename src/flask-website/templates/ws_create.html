@@ -14,29 +14,50 @@
     <div class="col-md-8 col-lg-6">
         <div class="card shadow-sm">
             <div class="card-body">
-                <form action="{{ url_for('ws_create') }}" method="POST">
+                <form action="{{ url_for('ws_create') }}" method="POST" class="needs-validation" novalidate>
                     <div class="mb-3">
                         <label for="name" class="form-label">Nom du Serveur Web</label>
                         <input type="text" class="form-control" id="name" name="name" placeholder="ex: Site-Vitrine" required>
+                        <div class="invalid-feedback">Veuillez entrer un nom.</div>
                     </div>
 
                     <div class="mb-3">
                         <label for="port" class="form-label">Port d'écoute</label>
-                        <input type="number" class="form-control" id="port" name="port" placeholder="ex: 80 ou 8080" required>
+                        <input type="number" class="form-control" id="port" name="port" placeholder="ex: 8080" 
+                               min="1" max="65535" required>
+                        <div class="invalid-feedback">Le port doit être compris entre 1 et 65535.</div>
                     </div>
 
                     <div class="mb-4">
                         <label for="root_path" class="form-label">Chemin racine (Root Path)</label>
-                        <input type="text" class="form-control" id="root_path" name="root_path" placeholder="ex: /var/www/html/monsite" required>
-                        <div class="form-text">Le dossier sur le serveur (Linux/Debian/AlmaLinux) où se trouvent les fichiers HTML.</div>
+                        <input type="text" class="form-control" id="root_path" name="root_path" placeholder="ex: /var/www/html/monsite" 
+                               pattern="^\/.*" required>
+                        <div class="invalid-feedback">Le chemin doit être absolu (commencer par un '/').</div>
+                        <div class="form-text">Le dossier sur le serveur où se trouvent les fichiers HTML.</div>
                     </div>
                     
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-success">Créer le Serveur Web</button>
+                        <button type="submit" class="btn btn-info text-white">Créer le Serveur Web</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
 {% endblock %}

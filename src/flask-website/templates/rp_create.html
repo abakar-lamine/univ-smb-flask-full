@@ -14,20 +14,24 @@
     <div class="col-md-8 col-lg-6">
         <div class="card shadow-sm">
             <div class="card-body">
-                <form action="{{ url_for('rp_create') }}" method="POST">
+                <form action="{{ url_for('rp_create') }}" method="POST" class="needs-validation" novalidate>
                     <div class="mb-3">
                         <label for="name" class="form-label">Nom du Reverse Proxy</label>
                         <input type="text" class="form-control" id="name" name="name" placeholder="ex: RP-App-Prod" required>
+                        <div class="invalid-feedback">Veuillez entrer un nom.</div>
                     </div>
 
                     <div class="mb-3">
                         <label for="ip_bind" class="form-label">IP Bind (Écoute)</label>
-                        <input type="text" class="form-control" id="ip_bind" name="ip_bind" placeholder="ex: 172.16.0.10" required>
+                        <input type="text" class="form-control" id="ip_bind" name="ip_bind" placeholder="ex: 172.16.0.10" 
+                               pattern="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$" required>
+                        <div class="invalid-feedback">Format IP invalide (ex: 192.168.1.10).</div>
                     </div>
 
                     <div class="mb-4">
                         <label for="target" class="form-label">Cible (Target Server)</label>
-                        <input type="text" class="form-control" id="target" name="target" placeholder="ex: http://10.0.0.5:8080" required>
+                        <input type="url" class="form-control" id="target" name="target" placeholder="ex: http://10.0.0.5:8080" required>
+                        <div class="invalid-feedback">Veuillez entrer une URL valide commençant par http:// ou https://</div>
                         <div class="form-text">L'adresse du serveur interne vers lequel rediriger les requêtes.</div>
                     </div>
                     
@@ -39,4 +43,20 @@
         </div>
     </div>
 </div>
+
+<script>
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
 {% endblock %}

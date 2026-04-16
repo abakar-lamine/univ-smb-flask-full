@@ -70,14 +70,23 @@
                         </li>
 
                         {% if session['username'] %}
-                            <li class="nav-item">
-                                <a class="nav-link text-danger" href="{{ url_for('logout') }}">Déconnexion ({{ session['username'] }})</a>
-                            </li>
-                        {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link text-success {% if request.endpoint == 'login' %}active{% endif %}" href="{{ url_for('login') }}">Connexion</a>
-                            </li>
-                        {% endif %}
+        <li class="nav-item me-3 d-none d-lg-block">
+            <span class="navbar-text py-0" style="font-size: 0.95em;">
+                👤 <strong>{{ session['username'] }}</strong>
+            </span>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-sm btn-outline-danger fw-semibold" href="{{ url_for('logout') }}">
+                Déconnexion
+            </a>
+        </li>
+    {% else %}
+        <li class="nav-item">
+            <a class="btn btn-sm btn-primary px-3 fw-semibold shadow-sm {% if request.endpoint == 'login' %}active{% endif %}" href="{{ url_for('login') }}">
+                Connexion
+            </a>
+        </li>
+    {% endif %}
                     </ul>
                 </div>
             </div>
