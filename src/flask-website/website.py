@@ -27,10 +27,7 @@ def login_required(f):
 
 @app.route('/')
 def index():
-    """Route racine. Si connecté, redirige vers la vue globale."""
-    if 'username' in session:
-        return redirect(url_for('list_all'))
-    return render_template('start.html') #
+    return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

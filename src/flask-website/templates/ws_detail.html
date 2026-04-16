@@ -98,8 +98,12 @@ server {
 <script>
 function copyConfig() {
     const config = document.getElementById('configArea').innerText;
-    navigator.clipboard.writeText(config);
-    alert('Configuration copiée dans le presse-papier !');
+    navigator.clipboard.writeText(config).then(() => {
+        // Au lieu du vieux alert(), on déclenche le Toast Bootstrap
+        const toastElement = document.getElementById('copyToast');
+        const toast = new bootstrap.Toast(toastElement);
+        toast.show();
+    });
 }
 </script>
 {% endblock %}

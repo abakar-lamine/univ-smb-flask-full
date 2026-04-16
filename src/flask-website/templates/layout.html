@@ -3,18 +3,48 @@
 
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <link href="https://fonts.googleapis.com/css?family=Arsenal" rel="stylesheet">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" />
     
     <style>
-        /* ASTUCE LOGO : Si le thème est sombre, on inverse les couleurs de l'image (noir devient blanc) */
+
+:root {
+    --bs-primary: #2c3e50; /* Un bleu nuit très pro */
+    --bs-primary-rgb: 44, 62, 80;
+    --bs-success: #20c997; /* Un vert émeraude tech */
+    --bs-info: #17a2b8;
+    --bs-warning: #f39c12;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+body {
+    background-color: #f8f9fa;
+    font-family: 'Montserrat', sans-serif;
+}
+
+[data-bs-theme="dark"] body {
+    background-color: #121212;
+}
+[data-bs-theme="dark"] .card {
+    background-color: #1e1e1e;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5) !important;
+}
+
         [data-bs-theme="dark"] .logo-img {
             filter: invert(1);
         }
         
-        /* DESIGN DU LIEN ACTIF : On souligne et on met en gras pour bien voir où on est */
         .navbar-nav .nav-link.active {
-            font-weight: bold;
+            font-weight: 600; 
             border-bottom: 2px solid currentColor;
         }
     </style>
@@ -142,6 +172,18 @@
             });
         });
     </script>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="copyToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <strong class="me-2">✓</strong> Configuration copiée dans le presse-papier !
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
 </body>
 
 </html>
