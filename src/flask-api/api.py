@@ -1,6 +1,7 @@
 import json
 import os
 from flask import Flask, jsonify, request
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
@@ -36,10 +37,46 @@ def hello():
 # PARTIE IDENTITÉ & AUTHENTIFICATION
 # ==========================================
 
-@app.route('/login', methods=['GET'])
+@app.route('/login', methods=['POST'])
 def login():
-    # Simulé pour le TP
-    return jsonify({"status": "success", "message": "Connecté à l'API"}), 200
+    credentials = request.get_json()
+    username = credentials.get('username')
+    password = credentials.get('password')
+    
+    users = read_json('users.json')
+    user = next((u for u in users if u['username'] == username), None)
+    
+    if user and check_password_hash(user['password'], password):
+        return jsonify({
+            "status": "success", 
+            "user": {"username": user['username'], "role": user['role']}
+        }), 200
+    
+    return jsonify({"status": "error", "message": "Identifiants invalides"}), 401
+
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+    
+    users = read_json('users.json')
+    
+    # Vérification si l'utilisateur existe déjà
+    if any(u['username'] == username for u in users):
+        return jsonify({"status": "error", "message": "Cet utilisateur existe déjà"}), 400
+    
+    # Création du nouvel utilisateur avec mot de passe haché
+    new_user = {
+        "username": username,
+        "password": generate_password_hash(password), # On ne stocke jamais en clair !
+        "role": "user" # Rôle par défaut
+    }
+    
+    users.append(new_user)
+    write_json('users.json', users)
+    
+    return jsonify({"status": "success", "message": "Compte créé avec succès"}), 201
 
 @app.route('/identity', methods=['GET'])
 def get_identities():

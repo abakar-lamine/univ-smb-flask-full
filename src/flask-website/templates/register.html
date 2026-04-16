@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block title %}Inscription{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow-sm border-success">
+            <div class="card-header bg-success text-white text-center">
+                <h4>Créer un compte</h4>
+            </div>
+            <div class="card-body">
+                {% if error %}<div class="alert alert-danger">{{ error }}</div>{% endif %}
+                
+                <form action="{{ url_for('register') }}" method="POST" class="needs-validation" novalidate>
+                    <div class="mb-3">
+                        <label class="form-label">Nom d'utilisateur</label>
+                        <input type="text" class="form-control" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mot de passe</label>
+                        <input type="password" class="form-control" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Confirmer le mot de passe</label>
+                        <input type="password" class="form-control" name="confirm_password" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">S'inscrire</button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <small>Déjà un compte ? <a href="{{ url_for('login') }}">Connectez-vous</a></small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

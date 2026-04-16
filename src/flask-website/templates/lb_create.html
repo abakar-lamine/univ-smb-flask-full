@@ -14,22 +14,26 @@
     <div class="col-md-8 col-lg-6">
         <div class="card shadow-sm">
             <div class="card-body">
-                <form action="{{ url_for('lb_create') }}" method="POST">
+                <form action="{{ url_for('lb_create') }}" method="POST" class="needs-validation" novalidate>
                     
                     <div class="mb-3">
                         <label for="name" class="form-label">Nom du Load Balancer</label>
                         <input type="text" class="form-control" id="name" name="name" placeholder="ex: LB Inter 3" required>
+                        <div class="invalid-feedback">Veuillez entrer un nom pour le Load Balancer.</div>
                     </div>
 
                     <div class="mb-3">
                         <label for="ip_bind" class="form-label">IP Bind (Écoute)</label>
-                        <input type="text" class="form-control" id="ip_bind" name="ip_bind" placeholder="ex: 172.0.0.3" required>
+                        <input type="text" class="form-control" id="ip_bind" name="ip_bind" placeholder="ex: 172.0.0.3" 
+                               pattern="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$" required>
+                        <div class="invalid-feedback">Format IP invalide. Veuillez entrer une adresse de type IPv4 (ex: 192.168.1.1).</div>
                         <div class="form-text">L'adresse IP sur laquelle le Load Balancer va écouter.</div>
                     </div>
 
                     <div class="mb-4">
                         <label for="pass" class="form-label">Pass (URL Cible)</label>
-                        <input type="text" class="form-control" id="pass" name="pass" placeholder="ex: http://localhost/C" required>
+                        <input type="url" class="form-control" id="pass" name="pass" placeholder="ex: http://localhost/C" required>
+                        <div class="invalid-feedback">Veuillez entrer une URL cible valide (doit commencer par http:// ou https://).</div>
                         <div class="form-text">L'adresse vers laquelle le trafic sera redirigé.</div>
                     </div>
                     
@@ -41,4 +45,25 @@
         </div>
     </div>
 </div>
+
+<script>
+    (function () {
+        'use strict'
+
+        // Récupérer tous les formulaires auxquels on veut appliquer la validation Bootstrap
+        var forms = document.querySelectorAll('.needs-validation')
+
+        // Boucler sur les formulaires et empêcher la soumission si c'est invalide
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+</script>
 {% endblock %}

@@ -1,0 +1,7 @@
+[
+    {
+        "username": "abakarlamine",
+        "password": "scrypt:32768:8:1$ElBh2LkY233VcpAI$34d4f57c164e973e7f2eaaf19923150ed250ac3244c8a38c07d1ae78a8cfd42cd488c00444748b91c490ee4b6dada834a83183b2acbd41abd84f844446ebed81",
+        "role": "user"
+    }
+]

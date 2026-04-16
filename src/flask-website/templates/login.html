@@ -9,12 +9,24 @@
             <div class="card-header bg-primary text-white text-center">
                 <h4>Authentification</h4>
             </div>
+            
             <div class="card-body">
+                {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+                {% endif %}
+
                 <form action="{{ url_for('login') }}" method="POST">
                     
                     <div class="mb-3">
                         <label for="username" class="form-label">Nom d'utilisateur</label>
                         <input type="text" class="form-control" id="username" name="username" placeholder="Entrez votre identifiant" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="password" class="form-label">Mot de passe</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Entrez votre mot de passe" required>
                     </div>
                     
                     <div class="d-grid gap-2">
@@ -23,6 +35,11 @@
                     
                 </form>
             </div>
+            
+            <div class="card-footer bg-white text-center py-3">
+                <small>Pas encore de compte ? <a href="{{ url_for('register') }}" class="text-decoration-none fw-bold">Inscrivez-vous ici</a></small>
+            </div>
+            
         </div>
     </div>
 </div>

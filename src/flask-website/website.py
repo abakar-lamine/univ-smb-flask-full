@@ -1,6 +1,6 @@
 import requests
 from functools import wraps
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, Response
 
 app = Flask(__name__)
 
@@ -34,13 +34,48 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    """Gère l'affichage du formulaire et l'ouverture de session."""
     if request.method == 'POST':
         username = request.form.get('username')
-        if username:
-            session['username'] = username
-            return redirect(url_for('list_all'))
-    return render_template('login.html')
+        password = request.form.get('password')
+        
+        # Appel à la "vraie" auth de l'API
+        try:
+            resp = requests.post(f"{API_URL}/login", json={"username": username, "password": password})
+            if resp.status_code == 200:
+                user_data = resp.json()['user']
+                session['username'] = user_data['username']
+                session['role'] = user_data['role']
+                return redirect(url_for('list_all'))
+        except:
+            pass
+        return render_template("login.html", error="Nom d'utilisateur ou mot de passe incorrect")
+    return render_template("login.html")
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+        
+        # Validation simple côté serveur
+        if password != confirm_password:
+            return render_template("register.html", error="Les mots de passe ne correspondent pas")
+            
+        try:
+            resp = requests.post(f"{API_URL}/register", json={
+                "username": username, 
+                "password": password
+            })
+            if resp.status_code == 201:
+                return redirect(url_for('login')) # Redirection après succès
+            else:
+                error_msg = resp.json().get('message', 'Erreur lors de l\'inscription')
+                return render_template("register.html", error=error_msg)
+        except:
+            return render_template("register.html", error="L'API est indisponible")
+            
+    return render_template("register.html")
 
 @app.route('/logout')
 def logout():
@@ -81,6 +116,21 @@ def list_all():
     except:
         lbs, rps, wss = [], [], []
     return render_template('list_all.html', lbs=lbs, rps=rps, wss=wss)
+
+@app.route('/download/<type_cfg>/<int:id>')
+@login_required
+def download_config(type_cfg, id):
+    # Récupération de l'objet via l'API
+    item = requests.get(f"{API_URL}/config/{type_cfg}/{id}").json()
+    
+    # Génération du contenu (même logique que dans le template)
+    content = f"server {{\n    listen {item.get('ip_bind', '80')}:80;\n    server_name {item['name']}.local;\n    # ... (code config) ...\n}}"
+    
+    return Response(
+        content,
+        mimetype="text/plain",
+        headers={"Content-disposition": f"attachment; filename=nginx_{item['name']}.conf"}
+    )
 
 # ==========================================
 # PARTIE LOAD BALANCER
